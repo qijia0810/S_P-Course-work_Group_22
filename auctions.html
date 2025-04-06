@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Auctions{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Active Auctions</h2>
+
+{% if active_auctions %}
+<div class="row">
+    {% for auction in active_auctions %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ auction.title }}</h5>
+                <p class="card-text text-muted">{{ auction.description|truncate(100) }}</p>
+                <p class="card-text">
+                    <strong>Current Price:</strong> ${{ "%.2f"|format(auction.current_price) }}<br>
+                    <strong>Started at:</strong> {{ auction.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{{ url_for('bidding.auction_detail', auction_id=auction.id) }}" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">No active auctions available.</div>
+{% endif %}
+
+<h2 class="mb-4 mt-5">Closed Auctions</h2>
+
+{% if closed_auctions %}
+<div class="row">
+    {% for auction in closed_auctions %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ auction.title }}</h5>
+                <p class="card-text text-muted">{{ auction.description|truncate(100) }}</p>
+                <p class="card-text">
+                    <strong>Final Price:</strong> ${{ "%.2f"|format(auction.current_price) }}<br>
+                    <strong>Ended at:</strong> {{ auction.end_time.strftime('%Y-%m-%d %H:%M') if auction.end_time else 'N/A' }}
+                </p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{{ url_for('bidding.auction_detail', auction_id=auction.id) }}" class="btn btn-outline-secondary">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">No closed auctions available.</div>
+{% endif %}
+<p>Active Auctions Count: {{ active_auctions|length }}</p>
+<p>Closed Auctions Count: {{ closed_auctions|length }}</p>
+{% endblock %}

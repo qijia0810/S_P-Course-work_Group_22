@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction System - Discover Unique Treasures</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --accent-color: #ff6b6b;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.9) !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, var(--accent-color), #f8a5c2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 6rem 0 8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+            background-size: cover;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .display-4 {
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .lead {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.9;
+        }
+
+        /* Button Styles */
+        .btn-action {
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border-width: 2px;
+            font-size: 1.1rem;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary-color);
+            border-color: white;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: white;
+        }
+
+        .btn-outline-light:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        /* Feature Cards */
+        .feature-section {
+            padding: 5rem 0;
+            background: #f8f9fa;
+        }
+
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            height: 100%;
+            background: white;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: rgba(255,255,255,0.7);
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        /* Animation Effects */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <i class="fas fa-gavel me-2"></i>Bidding System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="{{ url_for('bidding.list_auctions') }}">
+                            <i class="fas fa-search me-1"></i> Browse Auctions
+                        </a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link btn btn-outline-light rounded-pill px-3" href="{{ url_for('auth.register') }}">
+                            <i class="fas fa-user-plus me-1"></i> Free Sign Up
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container hero-content">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-4 fw-bold mb-4">Discover Unique Treasures Worldwide</h1>
+                    <p class="lead mb-5">Join our auction community to bid on rare collectibles, artworks, and limited edition items with an exciting bidding experience</p>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="{{ url_for('bidding.list_auctions') }}" class="btn btn-primary btn-action mb-3 mb-sm-0 me-sm-3 floating">
+                            <i class="fas fa-gavel me-2"></i> Start Bidding
+                        </a>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-action floating">
+                            <i class="fas fa-rocket me-2"></i> Quick Sign Up
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="feature-section">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-3">Why Choose Us?</h2>
+                    <p class="lead text-muted">We provide the safest and most convenient online auction experience</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                            <h3 class="card-title">Place Bids</h3>
+                            <p class="card-text text-muted">Bid on your favorite items, experience the thrill of auction, and get rare treasures at great prices</p>
+                            <a href="{{ url_for('bidding.list_auctions') }}" class="btn btn-outline-primary rounded-pill mt-3">
+                                Browse Auctions <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon">
+                                <i class="fas fa-upload"></i>
+                            </div>
+                            <h3 class="card-title">List Items</h3>
+                            <p class="card-text text-muted">Easily list your items for global collectors to bid, maximizing your item's value</p>
+                            {% if current_user.is_authenticated %}
+                                <a href="{{ url_for('bidding.create_auction') }}" class="btn btn-success rounded-pill mt-3">
+                                    Start Auction <i class="fas fa-plus-circle ms-1"></i>
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary rounded-pill mt-3">
+                                    Login to List <i class="fas fa-lock ms-1"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="card-title">Secure Transactions</h3>
+                            <p class="card-text text-muted">Bank-level security ensures every transaction is safe and reliable for both buyers and sellers</p>
+                            <a href="#" class="btn btn-outline-primary rounded-pill mt-3">
+                                Learn More <i class="fas fa-info-circle ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0">
+                        <i class="fas fa-gavel me-2"></i>© 2025 Bidding System. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scroll Effects -->
+    <script>
+        // Navigation bar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
