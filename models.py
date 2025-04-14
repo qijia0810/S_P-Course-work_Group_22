@@ -3,8 +3,10 @@ from datetime import datetime
 from sqlalchemy import event
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from flask_mail import Mail
 
 db = SQLAlchemy()
+mail = Mail()
 
 
 class User(db.Model, UserMixin):
@@ -60,7 +62,7 @@ class Auction(db.Model):
         return highest.bid_amount if highest else self.start_price
 
 
-    def update_auction_status(mapper, connection, target):
+    def update_auction_status(self, mapper, connection, target):
         """Automatic update of auction status"""
         if hasattr(target, 'end_time') and target.end_time:
             if target.end_time <= datetime.utcnow():

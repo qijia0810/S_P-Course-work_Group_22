@@ -1,9 +1,13 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask import current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from models import User, db, Session
 from datetime import datetime, timedelta
 import secrets
+import random
+from flask_mail import Message
+from models import mail
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -24,7 +28,33 @@ def login():
         print(f"check: {user.check_password(password)}")
         # 2. Verify Password
         if user and user.check_password(password):
-            # 3. Create Session Token (if using custom session management)
+            # Step 2: Generate a 6-digit MFA code and store temporary session
+            code = str(random.randint(100000, 999999))
+            session['temp_user_id'] = user.id
+            session['mfa_code'] = code
+            session['remember'] = remember
+            
+            # Send verification code via email
+            send_verification_code(user.email, code)
+            flash('Verification code sent to your email', 'info')
+            return redirect(url_for('auth.verify_code'))
+
+        flash('Invalid username or password', 'error')
+        return redirect(url_for('auth.login'))
+
+    return render_template('login.html')
+
+
+@auth_bp.route('/verify', methods=['GET', 'POST'])
+def verify_code():
+    if request.method == 'POST':
+        entered_code = request.form['code']
+        if entered_code == session.get('mfa_code'):
+            # Retrieve user from temporary session
+            user_id = session.get('temp_user_id')
+            user = User.query.get(user_id)
+
+            # Step 3: Create a new session token (custom session management)
             try:
                 token = secrets.token_hex(32)
                 expires_at = datetime.utcnow() + timedelta(days=1)
@@ -37,23 +67,25 @@ def login():
                 db.session.add(new_session)
                 db.session.commit()
 
-                # 4. Execute Flask-Login login
-                login_user(user, remember=remember)
+                # Step 4: Finalize Flask login
+                login_user(user, remember=session.get('remember'))
 
-                # 5. redirects
-                next_page = request.args.get('next')
-                return redirect(next_page or url_for('bidding.list_auctions'))
+                # Clear temporary MFA session data
+                session.pop('temp_user_id', None)
+                session.pop('mfa_code', None)
+                session.pop('remember', None)
+
+                return redirect(url_for('bidding.list_auctions'))
 
             except Exception as e:
                 db.session.rollback()
                 flash('Login failed due to system error', 'error')
                 return redirect(url_for('auth.login'))
 
-        # All validation failures
-        flash('Invalid username or password', 'error')
-        return redirect(url_for('auth.login'))
+        flash('Invalid verification code', 'error')
+        return redirect(url_for('auth.verify_code'))
 
-    return render_template('login.html')
+    return render_template('verify_code.html')
 
 @auth_bp.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -103,3 +135,10 @@ def logout():
     flash('You have been logged out', 'success')
     return redirect(url_for('home'))
 
+
+def send_verification_code(email, code):
+    msg = Message('Your Verification Code',
+                  sender=current_app.config['MAIL_USERNAME'],  # Ensures sender matches auth user
+                  recipients=[email])
+    msg.body = f'Your login verification code is: {code}'
+    mail.send(msg)

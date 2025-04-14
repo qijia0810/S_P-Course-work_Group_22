@@ -1,0 +1,7 @@
+<h2>Enter Verification Code</h2>
+<form method="POST">
+    <!-- Hidden CSRF token field -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">    <label>Code:</label>
+    <input type="text" name="code" required>
+    <button type="submit">Verify</button>
+</form>

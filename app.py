@@ -8,8 +8,9 @@ import os
 from auth import auth_bp
 from bidding import bidding_bp
 from pathlib import Path
-from models import db, User
+from models import db, User, mail
 from flask_wtf.csrf import CSRFProtect
+from flask_mail import Mail
 
 # Initializing a Flask Application
 app = Flask(__name__, template_folder='templates')
@@ -43,6 +44,16 @@ app.register_blueprint(bidding_bp)
 # Creating Database Tables (for the first run)
 with app.app_context():
     db.create_all()
+
+# Logging Configuration with One-Time Code via Email    
+app.config['MAIL_SERVER'] = 'smtp.qq.com'       # e.g., smtp.gmail.com
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = '1443932762@qq.com'
+app.config['MAIL_PASSWORD'] = 'ullopkocgqocjgee'
+
+# Initialize mail
+mail.init_app(app)
 
 if __name__ == '__main__':
     app.run(debug=True)
