@@ -16,8 +16,8 @@ def login():
         remember = True if request.form.get('remember') else False
 
         # 1. Verify user presence
-        user = User.query.filter_by(username=username).first()
         print(f"Searching for user: {username}")
+        user = User.query.filter_by(username=username).first()
         print(f"Found user: {user}")  # check if user is None
         print(f"input: {password}")
         print(f"user password: {user.password_hash}")
