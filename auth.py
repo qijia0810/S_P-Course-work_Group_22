@@ -18,11 +18,10 @@ def login():
         # 1. Verify user presence
         user = User.query.filter_by(username=username).first()
         print(f"Searching for user: {username}")
-        user = User.query.filter_by(username=username).first()
-        # print(f"Found user: {user}")  # 检查是否为None
-        # print(f"输入: {password}")
-        # print(f"user password: {user.password_hash}")
-        # print(f"check: {user.check_password(password)}")
+        print(f"Found user: {user}")  # check if user is None
+        print(f"input: {password}")
+        print(f"user password: {user.password_hash}")
+        print(f"check: {user.check_password(password)}")
         # 2. Verify Password
         if user and user.check_password(password):
             # 3. Create Session Token (if using custom session management)
