@@ -50,7 +50,9 @@ app.config['MAIL_SERVER'] = 'smtp.qq.com'       # e.g., smtp.gmail.com
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = '1443932762@qq.com'
-app.config['MAIL_PASSWORD'] = 'ullopkocgqocjgee'
+with open('pwd.key', 'r', encoding='utf-8') as f:
+    MAIL_PASSWORD = f.read().strip()  # Read password from file
+app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
 
 # Initialize mail
 mail.init_app(app)
