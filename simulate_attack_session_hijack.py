@@ -11,12 +11,12 @@ def simulate_session_hijack_attack():
 
         # obtain the session token of victim user
         print("Searching for the session token of the victim user...\n")
-        victim_user = User.query.filter_by(username='luckyli1107').first()
+        victim_user = User.query.filter_by(username='Clid').first()
         session = Session.query.filter_by(user_id=victim_user.id).first()
 
         if session:
             print(f"[+] session token stolen successfully: {session.token}")
-            print(f"[+] user ID: {victim_user.id}, username{victim_user.username}\n")
+            print(f"[+] user ID: {victim_user.id}, username: {victim_user.username}\n")
         else:
             print("[-] Session data not found")
 
