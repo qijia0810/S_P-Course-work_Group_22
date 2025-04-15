@@ -1,7 +1,40 @@
-<h2>Enter Verification Code</h2>
-<form method="POST">
-    <!-- Hidden CSRF token field -->
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">    <label>Code:</label>
-    <input type="text" name="code" required>
-    <button type="submit">Verify</button>
-</form>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">
+                <i class="bi bi-shield-lock-fill"></i> Two-Factor Verification
+            </h3>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="mb-3">
+                    <label for="code" class="form-label">Enter the 6-digit verification code sent to your email:</label>
+                    <input type="text" class="form-control" id="code" name="code" maxlength="6" required placeholder="e.g. 123456">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Verify</button>
+            </form>
+
+            <hr>
+            <p class="text-muted text-center mb-0">
+                Didn't receive the code? <a href="{{ url_for('auth.login') }}">Try logging in again</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
