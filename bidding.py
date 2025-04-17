@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from datetime import datetime, timedelta
-from models import db, Auction, Bid, User, limiter
+from models import db, Auction, Bid, User, limiter, require_valid_token
 import logging
 
 bidding_bp = Blueprint('bidding', __name__)
@@ -71,6 +71,7 @@ def create_auction():
 
 @bidding_bp.route('/auction/<int:auction_id>/bid', methods=['POST'])
 @login_required
+@require_valid_token
 @limiter.limit("10 per minute")
 def place_bid(auction_id):
     auction = Auction.query.get_or_404(auction_id)

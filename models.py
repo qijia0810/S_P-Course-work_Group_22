@@ -6,6 +6,9 @@ from flask_login import UserMixin
 from flask_mail import Mail
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask import session, abort
+from flask_login import current_user
+from functools import wraps
 
 limiter = Limiter(key_func=get_remote_address)
 
@@ -93,3 +96,16 @@ class Session(db.Model):
     token = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     expires_at = db.Column(db.DateTime, nullable=False)
+
+def require_valid_token(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        user_id = current_user.id
+        token = session.get('auth_token')  # this must be stored at login
+        if not token:
+            abort(403)
+        record = Session.query.filter_by(user_id=user_id, token=token).first()
+        if not record:
+            abort(403)
+        return f(*args, **kwargs)
+    return wrapper

