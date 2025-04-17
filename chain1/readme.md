@@ -49,14 +49,26 @@ python simulate_attack_password_leak.py
 You will see all usernames, emails, and plaintext passwords (because our system currently stores them insecurely).
 ![alt text](image-2.png)
 
-### ✅ What to Submit (For Coursework 1 - Part 4)
 
-Screenshots of each stage:
+# Corresponding Secure Policy
+To mitigate the risk of credential theft and unauthorized login—especially when the attacker extracts username-password pairs from a leaked database—we implemented a multi-factor authentication (MFA) mechanism that requires users to verify a one-time code sent to their email after successfully entering their password.
 
-Directory listing via RCE
+This defense is particularly effective against:
 
-.db file identified and base64 dumped
+- Database leakage (as simulated in the attack)
+- Password reuse across platforms
+- Credential stuffing from previously leaked data
 
-Decoded .db file restored
+![alt text](image-3.png)
+![alt text](image-4.png)
+✨ Key Features of MFA Design
 
-Script output showing leaked user credentials
+### ✨ Key Features of MFA Design
+
+| Component            | Description                                                              |
+|----------------------|---------------------------------------------------------------------------|
+| **Verification Method** | Email-based 6-digit code (one-time use)                                  |
+| **Trigger Point**        | After username/password verification, before completing login             |
+| **Storage**              | Code is stored temporarily in Flask `session`                             |
+| **Expiration**           | Codes are valid for one session or approximately 3 minutes               |
+| **Mail Sender**          | SMTP via Flask-Mail (e.g., using QQ or Gmail SMTP)                       |
