@@ -3,8 +3,18 @@ from datetime import datetime
 from sqlalchemy import event
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from flask_mail import Mail
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask import session, abort
+from flask_login import current_user
+from functools import wraps
+
+limiter = Limiter(key_func=get_remote_address)
+
 
 db = SQLAlchemy()
+mail = Mail()
 
 
 class User(db.Model, UserMixin):
@@ -21,13 +31,13 @@ class User(db.Model, UserMixin):
     sessions = db.relationship('Session', backref='user', lazy=True)
 
     def set_password(self, password):
-        self.password_hash = password
-        # self.password_hash = generate_password_hash(password)
+        # self.password_hash = password
+        self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        check=(self.password_hash == password)
-        return check
-        # return check_password_hash(self.password_hash, password)
+        # check=(self.password_hash == password)
+        # return check
+        return check_password_hash(self.password_hash, password)
 
 
 class Auction(db.Model):
@@ -60,7 +70,7 @@ class Auction(db.Model):
         return highest.bid_amount if highest else self.start_price
 
 
-    def update_auction_status(mapper, connection, target):
+    def update_auction_status(self, mapper, connection, target):
         """Automatic update of auction status"""
         if hasattr(target, 'end_time') and target.end_time:
             if target.end_time <= datetime.utcnow():
@@ -86,3 +96,16 @@ class Session(db.Model):
     token = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     expires_at = db.Column(db.DateTime, nullable=False)
+
+def require_valid_token(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        user_id = current_user.id
+        token = session.get('auth_token')  # this must be stored at login
+        if not token:
+            abort(403)
+        record = Session.query.filter_by(user_id=user_id, token=token).first()
+        if not record:
+            abort(403)
+        return f(*args, **kwargs)
+    return wrapper
