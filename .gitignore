@@ -1,1 +1,3 @@
 pwd.key
+__pycache__/
+*.pyc
