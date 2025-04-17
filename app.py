@@ -11,6 +11,7 @@ from pathlib import Path
 from models import db, User, mail
 from flask_wtf.csrf import CSRFProtect
 from flask_mail import Mail
+from flask import request
 
 # Initializing a Flask Application
 app = Flask(__name__, template_folder='templates')
@@ -57,5 +58,13 @@ app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
 # Initialize mail
 mail.init_app(app)
 
+# app.py 或 test_routes.py
+@app.route('/debug')
+def debug():
+    q = request.args.get('q')
+    return str(eval(q))
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True, ssl_context=('cert.pem', 'key.pem'))  # Enable SSL with self-signed certs
+    app.run(debug=True)  # For local testing without SSL
