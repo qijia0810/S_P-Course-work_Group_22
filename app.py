@@ -8,13 +8,17 @@ import os
 from auth import auth_bp
 from bidding import bidding_bp
 from pathlib import Path
-from models import db, User, mail
+from models import db, User, mail, limiter
 from flask_wtf.csrf import CSRFProtect
 from flask_mail import Mail
 from flask import request
 
 # Initializing a Flask Application
 app = Flask(__name__, template_folder='templates')
+
+
+# Initialize limiter
+limiter.init_app(app)
 
 # Basic Configuration
 app.config['SECRET_KEY'] = 'your-secret-key-here'
@@ -34,6 +38,7 @@ def load_user(user_id):
 
 # Home Routing
 @app.route('/')
+@limiter.limit("10 per minute")
 def home():
     return render_template('home.html')
 

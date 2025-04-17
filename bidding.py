@@ -1,15 +1,15 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from datetime import datetime, timedelta
-from models import db, Auction, Bid, User
+from models import db, Auction, Bid, User, limiter
 import logging
-
 
 bidding_bp = Blueprint('bidding', __name__)
 
 
 @bidding_bp.route('/auctions/')
 @login_required
+@limiter.limit("10 per minute")
 def list_auctions():
     active_auctions = Auction.query.filter_by(status='active').all()
     closed_auctions = Auction.query.filter_by(status='closed').all()
@@ -33,6 +33,7 @@ def auction_detail(auction_id):
 
 @bidding_bp.route('/auction/create', methods=['GET', 'POST'])
 @login_required
+@limiter.limit("10 per minute")
 def create_auction():
     if request.method == 'POST':
         title = request.form['title']
@@ -70,6 +71,7 @@ def create_auction():
 
 @bidding_bp.route('/auction/<int:auction_id>/bid', methods=['POST'])
 @login_required
+@limiter.limit("10 per minute")
 def place_bid(auction_id):
     auction = Auction.query.get_or_404(auction_id)
 
