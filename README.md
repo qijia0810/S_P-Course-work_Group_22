@@ -64,3 +64,13 @@ Password: test
 6. Manage the auction:
    - As the auction creator, you can end the auction early.
    - Check the status of the auctions you have created.
+  
+## GDPR requirements: Data portability and rights to erasure
+When clicking the dropdown menu named `Profile` on the top-right corner of the webpage, user will be redirected to a profile page like this:
+![alt text](image-1.png)
+
+Click on `📦 Download My Data (.json)`, user will be able to download a json file containing user's username, email, historical activities(auctions created and bids made).
+
+Click on `🗑️ Delete My Account`, user will be directed to a page asking for confirmation of account deletion.
+- click on `Yes, delete my account `, user account will be permanently deleted.
+- click on `Cancel`, this operation will be halted and user will be redirected to homepage.
