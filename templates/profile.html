@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title text-center">User Profile</h3>
+      <hr>
+      <p><strong>Username:</strong> {{ current_user.username }}</p>
+      <p><strong>Email:</strong> {{ current_user.email }}</p>
+
+      <div class="d-grid gap-2">
+        <a href="{{ url_for('gdpr.export_user_data') }}" class="btn btn-primary">
+          📦 Download My Data (.json)
+        </a>
+        <a href="{{ url_for('gdpr.delete_account') }}" class="btn btn-danger">
+          🗑️ Delete My Account
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

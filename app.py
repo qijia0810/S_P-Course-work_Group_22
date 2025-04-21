@@ -12,6 +12,8 @@ from models import db, User, mail, limiter
 from flask_wtf.csrf import CSRFProtect
 from flask_mail import Mail
 from flask import request
+from gdpr import gdpr_bp
+
 
 # Initializing a Flask Application
 app = Flask(__name__, template_folder='templates')
@@ -46,6 +48,7 @@ def home():
 # Registration Blueprint
 app.register_blueprint(auth_bp)
 app.register_blueprint(bidding_bp)
+app.register_blueprint(gdpr_bp)
 
 # Creating Database Tables (for the first run)
 with app.app_context():

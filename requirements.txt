@@ -8,3 +8,4 @@ email-validator
 python-dotenv
 beautifulsoup4
 locust
+Flask_limiter

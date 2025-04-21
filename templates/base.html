@@ -154,10 +154,20 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ url_for('auth.profile') }}">
                                         <i class="fas fa-user me-2"></i>Profile
                                     </a>
                                 </li>
+                                <!-- base.html 的用户下拉菜单中 -->
+                                <!-- <li>
+                                    <a class="dropdown-item" href="{{ url_for('gdpr.export_user_data') }}">Export My Data
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ url_for('gdpr.delete_account') }}">Delete Account
+                                    </a>
+                                </li> -->
+
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">

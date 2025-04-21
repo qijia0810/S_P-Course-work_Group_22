@@ -143,3 +143,8 @@ def send_verification_code(email, code):
                   recipients=[email])
     msg.body = f'Your login verification code is: {code}'
     mail.send(msg)
+    
+@auth_bp.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html')
