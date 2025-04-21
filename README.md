@@ -70,7 +70,9 @@ When clicking the dropdown menu named `Profile` on the top-right corner of the w
 ![alt text](image-1.png)
 
 Click on `📦 Download My Data (.json)`, user will be able to download a json file containing user's username, email, historical activities(auctions created and bids made).
+![alt text](image-3.png)
 
 Click on `🗑️ Delete My Account`, user will be directed to a page asking for confirmation of account deletion.
+![alt text](image-2.png)
 - click on `Yes, delete my account `, user account will be permanently deleted.
 - click on `Cancel`, this operation will be halted and user will be redirected to homepage.
