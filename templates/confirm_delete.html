@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Confirm Account Deletion</h2>
+  <p>This action will permanently delete your account and all associated data.</p>
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-danger">Yes, delete my account</button>
+    <a href="{{ url_for('home') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}
