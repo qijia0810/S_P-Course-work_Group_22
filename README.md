@@ -43,7 +43,7 @@ This is a Flask-based online auction system that allows users to register, log i
     ```bash
     python app.py
     ```
-    Click on the URL you get to access the Bidding System.![alt text](image.png)
+    Click on the URL you get to access the Bidding System.![alt text](images/image.png)
     
 
 ## Guidelines for use
@@ -67,12 +67,12 @@ Password: test
   
 ## GDPR requirements: Data portability and rights to erasure
 When clicking the dropdown menu named `Profile` on the top-right corner of the webpage, user will be redirected to a profile page like this:
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 
 Click on `📦 Download My Data (.json)`, user will be able to download a json file containing user's username, email, historical activities(auctions created and bids made).
-![alt text](image-4.png)
+![alt text](images/image-4.png)
 
 Click on `🗑️ Delete My Account`, user will be directed to a page asking for confirmation of account deletion.
-![alt text](image-2.png)
+![alt text](images/image-2.png)
 - click on `Yes, delete my account `, user account will be permanently deleted.
 - click on `Cancel`, this operation will be halted and user will be redirected to homepage.
