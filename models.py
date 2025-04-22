@@ -10,8 +10,10 @@ from flask import session, abort
 from flask_login import current_user
 from functools import wraps
 
-limiter = Limiter(key_func=get_remote_address)
-
+limiter = Limiter(
+    key_func=lambda: str(current_user.id) if current_user.is_authenticated else get_remote_address(),
+    default_limits=["200 per day", "50 per hour"],
+)
 
 db = SQLAlchemy()
 mail = Mail()
