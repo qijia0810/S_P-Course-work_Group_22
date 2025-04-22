@@ -7,7 +7,7 @@ This document provides a step-by-step simulation of a realistic attack chain tha
 ```mermaid
 graph TD
     A1[Access /debug endpoint with RCE] --> A2[List file system recursively]
-    A2 --> A3[Identify instance/bidding.db via 'ls']
+    A2 --> A3[Identify instance/bidding.db]
     A3 --> A4[Use simulate_attack_password_leak.py to extract credentials]
 ```
 ## ✅ Prerequisites
